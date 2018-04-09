@@ -1,39 +1,53 @@
 import Todo from "../model/Todo";
-import TodoRepository from "../model/TodoRepository";
-import TodoController from "../controller/TodoController";
+// import TodoRepository from "../model/TodoRepository";
+// import TodoController from "../controller/TodoController";
 
 
 export default class CommandLineRunner{
-  constructor(controller){
+  constructor(controller) {
     this.controller = controller;
     this.controller.create("buy milk");
     this.controller.create("wash car");
   }
 
-  showMenu(){
-    return prompt(this.controller.getAllString()
-              + "\nwhich item do you want to modify?(enter number)");
+  showTodos(){
+    var table = document.getElementById('table');
+    var tableHTML = '';
+    tableHTML += `<tr>
+                    <th>Todo</th>
+                  </tr>`;
+    this.controller.getAllAsArray().forEach(e => {
+      tableHTML += `<tr>
+                      <td>${e}</td>
+                    </tr>`;
+    });
+    table.innerHTML = tableHTML;
   }
-  showPrompt(){
-     return prompt("to delete enter 1, to mark done enter 2");
-  }
-  processInput(input, itemIndex){
-    input = parseInt(input);
-    itemIndex = parseInt(itemIndex) - 1;
-    if(input === 1){
+  modify(itemIndex, action){
+    if(action === 1){
       this.controller.delete(itemIndex);
-    }
-    if(input === 2){
+    } else if(action === 2){
       this.controller.markAsDone(itemIndex);
+    }
+  }
+  processInput(self){
+    var itemToModify = document.getElementById("itemToModify").value;
+    var actionChoice = document.getElementById("actionChoice").value;
+    if(!itemToModify || !actionChoice) {
+      return;
+    } else {
+      itemToModify = parseInt(itemToModify) - 1;
+      actionChoice = parseInt(actionChoice);
+      self.modify(itemToModify, actionChoice);
+      self.showTodos();
     }
   }
 
   run(){
-    while(true){
-      let itemIndex = this.showMenu();
-      let answer = this.showPrompt();
-      this.processInput(answer, itemIndex);
-    };
+    var submitButton = document.getElementById("submit");
+    var self = this;
+    submitButton.addEventListener("click", function() { return self.processInput(self); });
+    this.showTodos();
   }
 
 

@@ -21,10 +21,11 @@ export default class TodoController{
     this.repo.showContent();
   }
 
-  getAllString(){
-    let result = "";
-    this.repo.getAll().forEach( (td, index) =>
-        result += `> ${index+1} ) ${td.description} created ${td.created}, done? ${td.done} \n`);
+  getAllAsArray(){
+    let result = [];
+    this.repo.getAll().forEach(function(td, index) {
+        result.push(`> ${index+1} ) ${td.description} created ${td.created}, done? ${td.done}`);
+    });
     return result;
   }
 

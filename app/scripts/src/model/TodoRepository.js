@@ -19,7 +19,7 @@ export default class TodoRepository{
   }
 
   removeByIndex(index){
-    this.store = this.store.filter( (e, i) => i === index);
+    this.store = this.store.filter( (e, i) => i !== index);
   }
 
   findByIndex(index){
